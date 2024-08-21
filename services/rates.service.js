@@ -4,7 +4,7 @@ import { ethers, InfuraProvider } from 'ethers';
 async function getBinanceRate(baseCurrency, quoteCurrency) {
   try {
     const symbol = `${baseCurrency}${quoteCurrency}`.toUpperCase();
-    const response = await axios.get(`https://data-api.binance.vision/api/v3/ticker/price`, {
+    const response = await axios.get(`https://api.binance.us/api/v3/ticker/price`, {
       params: { symbol }
     });
 
@@ -15,7 +15,7 @@ async function getBinanceRate(baseCurrency, quoteCurrency) {
     try {
       // If the first pair fails, try the inverse
       const inverseSymbol = `${quoteCurrency}${baseCurrency}`.toUpperCase();
-      const inverseResponse = await axios.get(`https://api.binance.com/api/v3/ticker/price`, {
+      const inverseResponse = await axios.get(`https://api.binance.us/api/v3/ticker/price`, {
         params: { symbol: inverseSymbol }
       });
 
