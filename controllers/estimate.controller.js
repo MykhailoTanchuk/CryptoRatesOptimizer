@@ -9,6 +9,10 @@ export const estimateController = async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
+    if(inputAmount <= 0) {
+      return res.status(400).json({ error: 'inputAmount must be greater than 0' });
+    }
+
     // Call the service to get the best estimate
     const result = await estimateExchange(parseFloat(inputAmount), inputCurrency, outputCurrency);
 

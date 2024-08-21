@@ -12,7 +12,21 @@ async function getBinanceRate(baseCurrency, quoteCurrency) {
     console.log(`The price of 1 ${baseCurrency} in ${quoteCurrency} on Binance is ${rate}`);
     return rate;
   } catch (error) {
-    console.error(`Error fetching the rate for ${baseCurrency}/${quoteCurrency} on Binance:`);
+    try {
+      // If the first pair fails, try the inverse
+      const inverseSymbol = `${quoteCurrency}${baseCurrency}`.toUpperCase();
+      const inverseResponse = await axios.get(`https://api.binance.com/api/v3/ticker/price`, {
+        params: { symbol: inverseSymbol }
+      });
+
+      const inverseRate = inverseResponse.data.price;
+      const rate = 1 / inverseRate;
+      console.log(`The price of 1 ${baseCurrency} in ${quoteCurrency} on Binance is ${rate} (inverse pair used)`);
+      return rate.toString();
+    } catch (inverseError) {
+      console.error(`Error fetching the inverse rate for ${quoteCurrency}/${baseCurrency} on Binance.`);
+      return null; // Return null if both attempts fail
+    }
   }
 }
 
@@ -27,7 +41,21 @@ async function getKuCoinRate(baseCurrency, quoteCurrency) {
     console.log(`The price of 1 ${baseCurrency} in ${quoteCurrency} on KuCoin is ${rate}`);
     return rate;
   } catch (error) {
-    console.error(`Error fetching the rate for ${baseCurrency}/${quoteCurrency} on KuCoin:`);
+    try {
+      // If the first pair fails, try the inverse
+      const inverseSymbol = `${quoteCurrency}-${baseCurrency}`.toUpperCase();
+      const inverseResponse = await axios.get(`https://api.kucoin.com/api/v1/market/orderbook/level1`, {
+        params: { symbol: inverseSymbol }
+      });
+
+      const inverseRate = inverseResponse.data.data.price;
+      const rate = 1 / inverseRate;
+      console.log(`The price of 1 ${baseCurrency} in ${quoteCurrency} on KuCoin is ${rate} (inverse pair used)`);
+      return rate.toString();
+    } catch (inverseError) {
+      console.error(`Error fetching the inverse rate for ${quoteCurrency}/${baseCurrency} on KuCoin.`);
+      return null; // Return null if both attempts fail
+    }
   }
 }
 
