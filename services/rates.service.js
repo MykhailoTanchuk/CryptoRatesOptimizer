@@ -25,6 +25,7 @@ async function getBinanceRate(baseCurrency, quoteCurrency) {
       return rate.toString();
     } catch (inverseError) {
       console.error(`Error fetching the inverse rate for ${quoteCurrency}/${baseCurrency} on Binance.`);
+      console.error(inverseError);
       return null; // Return null if both attempts fail
     }
   }
